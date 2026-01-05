@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Kantin Pemancingan - Billing System</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 20px; }
+        .container { display: flex; gap: 20px; }
+        .menu-section, .order-section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .menu-section { flex: 1; }
+        .order-section { flex: 1; }
+        .menu-item { display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; }
+        .btn { cursor: pointer; padding: 5px 10px; background: #28a745; color: white; border: none; border-radius: 3px; }
+        .btn-pay { background: #dc3545; margin-top: 10px; width: 100%; padding: 10px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+    <h2>🎣 POS Kantin Pemancingan</h2>
+
+    <div class="container">
+        <div class="menu-section">
+            <h3>Daftar Menu</h3>
+            <div id="menu-list">
+                <div class="menu-item">
+                    <span>Kopi Hitam (Rp 5.000)</span>
+                    <button class="btn" onclick="addToCart('Kopi Hitam', 5000)">Tambah</button>
+                </div>
+                <div class="menu-item">
+                    <span>Mie Rebus + Telur (Rp 15.000)</span>
+                    <button class="btn" onclick="addToCart('Mie Rebus+Telor', 15000)">Tambah</button>
+                </div>
+                <div class="menu-item">
+                    <span>Umpan Pelet (Rp 10.000)</span>
+                    <button class="btn" onclick="addToCart('Umpan Pelet', 10000)">Tambah</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-section">
+            <h3>Tagihan Meja / Lapak: <input type="text" id="nomor-meja" placeholder="Contoh: Lapak 01" style="padding: 5px;"></h3>
+            <table id="order-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Harga</th>
+                    </tr>
+                </thead>
+                <tbody id="cart-items">
+                    </tbody>
+            </table>
+            <h4>Total: Rp <span id="total-price">0</span></h4>
+            <button class="btn btn-pay" onclick="checkout()">Selesaikan Pembayaran & Reset</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        let total = 0;
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateUI();
+        }
+
+        function updateUI() {
+            const cartTable = document.getElementById('cart-items');
+            const totalDisplay = document.getElementById('total-price');
+            cartTable.innerHTML = '';
+            total = 0;
+
+            cart.forEach((item) => {
+                let row = <tr><td>${item.name}</td><td>Rp ${item.price.toLocaleString()}</td></tr>;
+                cartTable.innerHTML += row;
+                total += item.price;
+            });
+
+            totalDisplay.innerText = total.toLocaleString();
+        }
+
+        function checkout() {
+            const meja = document.getElementById('nomor-meja').value;
+            if (cart.length === 0 || meja === "") {
+                alert("Pilih menu dan isi nomor lapak dulu!");
+                return;
+            }
+            alert(Pembayaran untuk ${meja} sebesar Rp ${total.toLocaleString()} Berhasil!);
+            cart = [];
+            document.getElementById('nomor-meja').value = "";
+            updateUI();
+        }
+    </script>
+</body>
+</html>
